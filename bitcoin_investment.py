@@ -3,13 +3,12 @@ Application : Clubhouse Application
 Authors:
     *. Vinutha K.S
     *. Nayaz Basha H M
-    *. Dileep Dominic
+    *. Dileep R Dominic
     *. M R Rahamath 
 
 Application is designed using python 3.7
 
 '''
-
 #global Variable
 
 class bitcoinprofit:
@@ -19,34 +18,10 @@ class bitcoinprofit:
         self.inputfile="data/inputPS8.txt"
         self.outputfile="data/outputPS8.txt"
 
-    #Function to Read Input file inputPS8.txt, this function internally calls insertAppDetails & write_toFile
-    def readfile(self):
-        arr = []
-        arr2 = []
-
-        with open(self.inputfile) as inputFile:
-            for record in inputFile:
-                recordAttributes = record.replace('\n','').split("/")
-                #print("recordAttributes",recordAttributes[2])
-                arr.append(int(recordAttributes[1]))              
-
-        print(arr)
-        profitLinear,profitStart,profitEnd = self.maxProfitLinear(arr)
-        
-        profitDivandConquer = self.DivideAndConquerProfit(arr)
-
-        with open(self.outputfile,'a') as outputFile:
-            outputFile.truncate(0)
-        Insert_Details="Maximum Profit (Iterative solution): "+ str(profitLinear) +"\n Day to buy:" + str(profitStart) + "\n Day to sell : " + str(profitEnd) + "\n" + "Maximum Profit (Divide and Conquer): "+ str(profitDivandConquer) +"\n"
-       
-        global write_toFile
-        #Function to write required details to output file
-        self.write_toFile(self.outputfile,Insert_Details)
-
     def maxProfitLinear(self,a):
-        maxprofit=0
-        startday=99
-        endday=99
+        maxprofit = 0
+        startday = 0 
+        endday = 0
 
         for i in range(0,len(a)):
             for j in range(i+1,len(a)):
@@ -65,17 +40,17 @@ class bitcoinprofit:
         if len(arr) <= 1:
             return 0
 
-        # Cut the array into two roughly equal pieces.
-        left  = arr[ : int(len(arr) / 2)]
-        right = arr[int(len(arr) / 2) : ]
+        # Cuttig the array into two
+        leftArray  = arr[ : int(len(arr) / 2)]
+        rightArray = arr[int(len(arr) / 2) : ]
 
         # Find the values for buying and selling purely in the left or purely in
         # the right.
-        leftBest = self.DivideAndConquerProfit(left)
-        rightBest = self.DivideAndConquerProfit(right)
+        leftBest = self.DivideAndConquerProfit(leftArray)
+        rightBest = self.DivideAndConquerProfit(rightArray)
 
         # Compute the best profit for buying in the left and selling in the right.
-        crossBest = max(right) - min(left)
+        crossBest = max(rightArray) - min(leftArray)
 
         # Return the best of the three
         m = max(leftBest, rightBest, crossBest)
@@ -86,6 +61,31 @@ class bitcoinprofit:
     def write_toFile(outputLocation,OutputValue):
         with open(outputLocation,'a') as outputFile:
             outputFile.write(str(OutputValue))
+
+    #Function to Read Input file inputPS8.txt, this function internally calls insertAppDetails & write_toFile
+    def readfile(self):
+        arr = []
+
+        with open(self.inputfile) as inputFile:
+            for record in inputFile:
+                recordAttributes = record.replace('\n','').split("/")
+                arr.append(int(recordAttributes[1]))              
+                
+        profitLinear,profitStart,profitEnd = self.maxProfitLinear(arr)
+        
+        if (profitLinear == 0 ):
+            profitStart = 0
+            profitEnd = 0
+
+        profitDivandConquer = self.DivideAndConquerProfit(arr)
+
+        with open(self.outputfile,'a') as outputFile:
+            outputFile.truncate(0)
+        Insert_Details="Maximum Profit (Iterative solution): "+ str(profitLinear) +"\n Day to buy : " + str(profitStart) + "\n Day to sell : " + str(profitEnd) + "\n" + "Maximum Profit (Divide and Conquer): "+ str(profitDivandConquer) +"\n"
+       
+        global write_toFile
+        #Function to write required details to output file
+        self.write_toFile(self.outputfile,Insert_Details)
 
 
 bitcoinprofit_Object = bitcoinprofit()  
