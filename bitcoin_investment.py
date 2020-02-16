@@ -9,6 +9,8 @@ Authors:
 Application is designed using python 3.7
 
 '''
+
+import sys 
 #global Variable
 
 class bitcoinprofit:
@@ -18,7 +20,7 @@ class bitcoinprofit:
         self.inputfile="data/inputPS8.txt"
         self.outputfile="data/outputPS8.txt"
 
-    def maxProfitLinear(self,a):
+    def LinearMaxProfit(self,a):
         maxprofit = 0
         startday = 0 
         endday = 0
@@ -65,13 +67,19 @@ class bitcoinprofit:
     #Function to Read Input file inputPS8.txt, this function internally calls insertAppDetails & write_toFile
     def readfile(self):
         arr = []
-
+        count = 0
         with open(self.inputfile) as inputFile:
             for record in inputFile:
                 recordAttributes = record.replace('\n','').split("/")
                 arr.append(int(recordAttributes[1]))              
-                
-        profitLinear,profitStart,profitEnd = self.maxProfitLinear(arr)
+                count = count + 1
+                #A check to make sure a max of month is only taken. 
+                if count>31:
+                    print("Max input for a month has reached")
+                    sys.exit(0)
+
+
+        profitLinear,profitStart,profitEnd = self.LinearMaxProfit(arr)
         
         if (profitLinear == 0 ):
             profitStart = 0
